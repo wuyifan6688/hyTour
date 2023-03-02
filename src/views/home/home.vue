@@ -6,14 +6,12 @@
         <img src="@/assets/img/home/banner.webp" alt="">
     </div>
 
-    <div class="location">
-        <div class="city">广州</div>
-        <div class="position">
-            <span class="text">我的位置</span>
-            <img src="@/assets/img/home/icon_location.png" alt="">
-        </div>
+    <searchBox></searchBox>
+    
+    <div class="hotSuggests">
+      <template v-for="(item,index) in hotSuggests" :key="index">
+      <div class="item" :style="{color: item.tagText.color,backgroundColor: item.tagText.background.color}">{{ item.tagText.text }}</div></template>
     </div>
-
 
 
   </div>
@@ -21,6 +19,17 @@
 
 <script setup>
 import navBar from "./cpns/home-nav-bar.vue"
+import searchBox from "./cpns/home-search-box.vue"
+import useHomeStore from "../../store/modules/home.js"
+import { storeToRefs } from "pinia"
+
+
+
+const homeStore=useHomeStore()
+homeStore.fetchHotSugggets()
+const {hotSuggests}=storeToRefs(homeStore)
+
+
 </script>
 
 <style lang="less" scoped>
@@ -29,32 +38,22 @@ import navBar from "./cpns/home-nav-bar.vue"
         width: 100%;
     }
 }
-.location{
-    display: flex;
-    height: 44px;
-    padding: 0 20px;
-    align-items: center;
 
-    .city{
-        flex: 1;
-    }
 
-    .position{
-        width: 74px;
-        display: flex;
-        align-items: center;
-
-        .text{
-            position: relative;
-            top: 2px;
-            font-size: 12px;
-        }
-
-        img{
-            margin-left: 5px;
-            width: 18px;
-            height: 18px;
-        }
-    }
+.hotSuggests{
+  display: flex;
+ flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 20px 20px;
+  .item{
+    justify-content: center;
+    padding: 4px 10px;//非常关键的属性
+    font-size: 14px;
+   margin-bottom: 10px;
+    background-color: #ffd4b7;
+    border-radius: 14px;
+ 
+  }
 }
+
 </style>
