@@ -12,14 +12,14 @@
             <div class="start">
                 <div class="date">
                      <span class="tip">入住</span>
-                    <span class="time">{{startDate}}</span>
+                    <span class="time">{{startStr}}</span>
                 </div>              
             </div>
             <div class="stay">共{{stayCount}}天</div>
             <div class="end">
                 <div class="date">
                     <span class="tip">离店</span>
-                    <span class="time">{{endDate}}</span>
+                    <span class="time">{{endStr}}</span>
                 </div>
                 
             </div>
@@ -36,6 +36,20 @@
         
         <van-calendar v-model:show="show" type="range" @confirm="onConfirm" color="#ff9854"/>
 
+
+
+
+        <div class="hotSuggests">
+      <template v-for="(item,index) in hotSuggests" :key="index">
+      <div class="item" :style="{color: item.tagText.color,backgroundColor: item.tagText.background.color}">{{ item.tagText.text }}</div></template>
+    </div>
+
+    <button type="submit" class="search" @click="clickSearch">开始搜索</button>
+
+
+
+
+
     </div>
   
 
@@ -46,13 +60,19 @@
 <script setup>
 import {useRouter} from "vue-router"
 import useCityStore from "@/store/modules/city.js"
+import useHomeStore from "@/store/modules/home.js"
+import useMainStore from "../../../store/modules/main";
 import { storeToRefs } from "pinia";
 import {formatMonthDay,getDiffDays} from "@/utils/format_date.js"
-import {ref} from "vue"
+import {computed, ref} from "vue"
 
 const router=useRouter();
 const cityStore=useCityStore()
 const {currentCity}=storeToRefs(cityStore)
+
+const homeStore=useHomeStore()
+homeStore.fetchHotSugggets()
+const {hotSuggests}=storeToRefs(homeStore)
 
 
 const positionClick=()=>{
@@ -66,22 +86,43 @@ const toCity=()=>{
     router.push("/city")
 }
 
-const nowDate=new Date()
-let newDate=new Date()
-const startDate=ref(formatMonthDay(nowDate));
-     newDate=newDate.setDate(nowDate.getDate()+1);//会把newdate本身的值也改了
-const endDate =ref(formatMonthDay(newDate))
-const stayCount=ref(getDiffDays(nowDate,newDate))//传递的是原始时间，不是处理后的时间
+
+
+const mainStore=useMainStore()
+const {startDate,endDate}=storeToRefs(mainStore)
+
+ let startStr=computed(()=>formatMonthDay(startDate.value))//不需要大括号
+ let endStr=computed(()=>formatMonthDay(endDate.value))
+
+const stayCount=ref(getDiffDays(startDate.value,endDate.value))//传递的是原始时间，不是处理后的时间
 
 
 const show=ref(false)
 const onConfirm=(value)=>{
    let selectStartDate=value[0];
    let  selectEndDate=value[1];
-    startDate.value=formatMonthDay(selectStartDate)
-    endDate.value=formatMonthDay(selectEndDate)
+   startDate.value=selectStartDate;
+   endDate.value=selectEndDate;
+
+   startStr=formatMonthDay(selectStartDate)
+   endStr=formatMonthDay(selectEndDate)
     stayCount.value=getDiffDays(selectStartDate,selectEndDate)
     show.value=false
+}
+
+
+
+const clickSearch=()=>{
+    router.push(
+        {
+            path:"/search",
+            query:{
+                startDate:startDate.value,
+                endDate:endDate.value,
+                currentCity:currentCity.value.cityName
+            }
+        }
+    )
 }
 </script>
 
@@ -179,5 +220,32 @@ const onConfirm=(value)=>{
         height: 30px;
         align-items: center;
     }
+}
+
+.hotSuggests{
+  display: flex;
+ flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 20px 20px;
+  .item{
+    justify-content: center;
+    padding: 4px 10px;//非常关键的属性
+    font-size: 14px;
+   margin-bottom: 10px;
+    background-color: #ffd4b7;
+    border-radius: 14px;
+ 
+  }
+}
+
+.search{
+    color: white;
+    font-size: 20px;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(90deg, #fa8c1d, #fcaf3f);
 }
 </style>

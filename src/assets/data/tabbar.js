@@ -17,7 +17,7 @@ const tabbarData=[
         text:"订单",
         image:"tabbar/tab_order.png",
         imageActive:"tabbar/tab_order_active.png",
-        path:"/order                                                                "
+        path:"/order"                                                           
     },
     { id:4,
         text:"消息",
