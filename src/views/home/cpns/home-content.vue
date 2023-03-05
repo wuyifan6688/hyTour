@@ -6,8 +6,8 @@
 
     <div class="show">
         <template v-for="(item,index) in content" :key="index">
-            <contentV3 v-if="item.discoveryContentType==3" :itemData="item.data"></contentV3>
-            <contentV9 v-else :itemData="item.data"></contentV9>
+            <contentV3 v-if="item.discoveryContentType==3" :itemData="item.data"  @click="clickIn(item.data)"></contentV3>
+            <contentV9 v-else :itemData="item.data" @click="clickIn(item.data)"></contentV9>
         </template>
     </div>
 
@@ -21,7 +21,7 @@ import useHomeStore  from "@/store/modules/home.js"
 import {storeToRefs} from "pinia"
 import contentV3 from "@/components/content-type-3/content-type-3.vue"
 import contentV9 from "@/components/content-type-9/content-type-9.vue"
-
+import { useRouter } from "vue-router"
 
 
 const homeStore=useHomeStore();
@@ -34,6 +34,13 @@ const clickData=()=>{
   //let {content}=storeToRefs(homeStore)不能放在内部
   console.log(content)
 }
+
+const router=useRouter()    
+const clickIn=(item)=>{
+    router.push(`/detail/${item.houseId}`)
+}
+
+
 </script>
 
 <style lang="less" scoped>

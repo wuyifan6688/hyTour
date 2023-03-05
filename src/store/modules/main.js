@@ -6,7 +6,8 @@ const useMainStore=defineStore("main",
 {
     state:()=>({
          startDate:startDate,
-         endDate:endDate
+         endDate:endDate,
+         isLoading:false
         }),
 
 })

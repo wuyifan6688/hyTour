@@ -14,7 +14,7 @@
 
     <searchBar v-show="isShowSearchBar"></searchBar>
 
-
+    <loading></loading>
     <content ></content>
   
   </div>
@@ -30,7 +30,7 @@ import useScroll from "../../hooks/useScroll"
 import { computed, watch } from "vue"
 import useMainStore from "../../store/modules/main"
 import searchBar from "@/components/search-bar/search-bar.vue"
-
+import loading from "@/components/loading/loading.vue"
 
 
 const mianStore=useMainStore()

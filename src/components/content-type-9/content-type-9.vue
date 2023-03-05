@@ -13,7 +13,7 @@
       
      
       <div class="price">
-        <van-rate :v-model="itemScore" size="12px"  readonly allow-half color="white"/>
+        <van-rate v-model="itemScore" size="12px"  readonly allow-half  style="--van-rate-icon-full-color: white;"/>
            <div class="priceNow">￥{{    itemData.finalPrice }}</div>
       </div>
 
@@ -80,6 +80,9 @@ import { computed } from "vue"
       border-radius: 20px;
   }
   
+
+
+
   .text{
    
     bottom: 10px;
@@ -95,6 +98,7 @@ import { computed } from "vue"
           display: flex;
           font-size: 14px;
   
+        
          .priceNow{
           color: white;
           margin-right: 2px;
