@@ -28,7 +28,7 @@ export default function useScroll(elRef){
         if(scrollTop.value+clientHeight.value>=scrollHeight.value){
             isReachBottom.value=true
             
-        }console.log("eee")
+        }
         //console.log(scrollTop.value,clientHeight.value,scrollHeight.value)
     },100)
 

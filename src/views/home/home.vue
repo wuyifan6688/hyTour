@@ -57,7 +57,7 @@ return  scrollTop.value>=420
 })
 
 
-console.log(homeRef.scrollTop)
+
 
 onActivated(()=>{
   

@@ -90,7 +90,7 @@ watch(scrollTop,(newValue)=>{
     for(let i=0;i<value.length;i++)
     {
         if(value[i]>newValue+37)
-        {active.value=i-1;console.log(`当前${active.value}`);break}//必须要把active=ref()里面设置为0，才能取出value值
+        {active.value=i-1;break}//必须要把active=ref()里面设置为0，才能取出value值
     }
     
 })
@@ -117,7 +117,7 @@ const onClickLeft=()=>{
 const houseId=route.params.id
 
 const detailInfos=ref({})
-const mainPart=computed(()=>detailInfos?.value.mainPart)
+const mainPart=computed(()=>detailInfos?.value?.mainPart)
 getDetail(houseId).then(res=>{
         detailInfos.value=res.data
 })
