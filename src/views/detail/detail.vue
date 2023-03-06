@@ -1,13 +1,13 @@
 <template>
-  <div>
+  <div class="all">
     <div class="nav">
-          <van-tabs v-model:active="active" @click-tab="onClickTab" v-if="show">
+          <van-tabs v-model:active="active" @click-tab="onClickTab"   v-if="show">
+  <van-tab title="照片"></van-tab>
   <van-tab title="描述"></van-tab>
   <van-tab title="设施"></van-tab>
   <van-tab title="房东"></van-tab>
   <van-tab title="评论"></van-tab>
-  <van-tab title="评论"></van-tab>
-  <van-tab title="周边"></van-tab>
+  <van-tab title="更多"></van-tab>
 </van-tabs>
     </div>
   
@@ -27,12 +27,12 @@
 
 <!-- 这个部分有点问题，如果没有vif的话，也就是没有计算属性的话，就不会刷新 -->
 <div v-if="mainPart">
-<swipe name="描述" :ref="getSctionRef"  :swipeData="mainPart?.topModule.housePicture.housePics"></swipe>
-<info name="设施" :ref="getSctionRef" :infoData="mainPart?.topModule"></info>
-<facility name="房东" :ref="getSctionRef" :facilityData="mainPart?.dynamicModule.facilityModule"></facility>
-<landLord name="评论" :ref="getSctionRef" :landLordData="mainPart?.dynamicModule.landlordModule"> </landLord>
-<comment name="须知" :ref="getSctionRef" :commentData="mainPart?.dynamicModule.commentModule"></comment>
-<more name="周边"  :ref="getSctionRef" ></more>
+<swipe name="照片" :ref="getSctionRef"  :swipeData="mainPart?.topModule.housePicture.housePics"></swipe>
+<info name="描述" :ref="getSctionRef" :infoData="mainPart?.topModule"></info>
+<facility name="设施" :ref="getSctionRef" :facilityData="mainPart?.dynamicModule.facilityModule"></facility>
+<landLord name="房东" :ref="getSctionRef" :landLordData="mainPart?.dynamicModule.landlordModule"> </landLord>
+<comment name="评论" :ref="getSctionRef" :commentData="mainPart?.dynamicModule.commentModule"></comment>
+<more name="更多"  :ref="getSctionRef" ></more>
 <!-- 之前：landLordData单词搞错了 -->
 </div>
 
@@ -58,7 +58,7 @@ import useScroll from '../../hooks/useScroll';
 
 
 
-let active=ref()
+let active=ref(0)
 let show=ref(false)
 const {scrollTop}=useScroll()
 watch(scrollTop,(newValue)=>{
@@ -68,17 +68,34 @@ watch(scrollTop,(newValue)=>{
 ///////////////////////////////////
 const sectionEls=ref({});
 const getSctionRef=(value)=>{
+    if(!value)return ;//非常重要，在切换路由的时候，value会销毁，那么value会未定义，会报错
     const name=value.$el.getAttribute("name")
+    sectionEls.value[name] = value.$el
     
-    console.log(value.$el.offsetHeight)
 }
 
-
+let test=ref(0)
 const onClickTab=(value)=>{
-    console.log(value.title)
 
-    
+const el=sectionEls.value[value.title]
+let distance=el.offsetTop-37
+window.scrollTo({top:distance})
 }
+
+watch(scrollTop,(newValue)=>{
+    const els=Object.values(sectionEls.value)
+    const value=els.map(el=>el.offsetTop);
+    active.value=value.length-1;
+     
+    for(let i=0;i<value.length;i++)
+    {
+        if(value[i]>newValue+37)
+        {active.value=i-1;console.log(`当前${active.value}`);break}//必须要把active=ref()里面设置为0，才能取出value值
+    }
+    
+})
+
+
 /////////
 
 
@@ -87,7 +104,7 @@ const onClickTab=(value)=>{
 
 
 watch(scrollTop,(newValue)=>{
- console.log(newValue)
+
 })
 
 const route=useRoute();
@@ -100,13 +117,16 @@ const onClickLeft=()=>{
 const houseId=route.params.id
 
 const detailInfos=ref({})
-const mainPart=computed(()=>detailInfos.value.mainPart)
+const mainPart=computed(()=>detailInfos?.value.mainPart)
 getDetail(houseId).then(res=>{
         detailInfos.value=res.data
 })
 </script>
 
 <style lang="less" scoped>
+.all{
+    margin-bottom: 700px;
+}
 .nav{
     position: fixed;
     z-index: 99;

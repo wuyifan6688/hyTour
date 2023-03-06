@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="favor">
     favor
   </div>
 </template>
@@ -10,6 +10,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="less" scoped>
+.favor{
+  height: 999px;
+  background-color: red;
+}
 </style>

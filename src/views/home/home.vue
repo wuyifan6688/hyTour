@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" ref="homeRef">
     <navBar></navBar>
     
     <div class="banner">
@@ -27,16 +27,24 @@ import categories from "./cpns/home-categories.vue"
 import content from "./cpns/home-content.vue"
 import useHomeStore  from "@/store/modules/home.js"
 import useScroll from "../../hooks/useScroll"
-import { computed, watch } from "vue"
+import { computed, onActivated, watch ,ref} from "vue"
 import useMainStore from "../../store/modules/main"
 import searchBar from "@/components/search-bar/search-bar.vue"
 import loading from "@/components/loading/loading.vue"
 
 
+
+
+
 const mianStore=useMainStore()
 
+const homeRef=ref()
+
+
+
+
 const homeStore= useHomeStore();
-const {isReachBottom,scrollTop}=useScroll()
+const {isReachBottom,scrollTop}=useScroll(homeRef)
 watch(isReachBottom,(newValue)=>{
   if(newValue){
     homeStore.fetchContent().then(()=>isReachBottom.value=false)//记得加value
@@ -49,11 +57,26 @@ return  scrollTop.value>=420
 })
 
 
+console.log(homeRef.scrollTop)
+
+onActivated(()=>{
+  
+  homeRef.value?.scrollTo({
+    top:scrollTop.value
+  })
+})
 
 </script>
 
 <style lang="less" scoped>
-.banner{
+
+.home{
+  height: 100vh;
+  overflow-y: auto;//这个很关键
+  padding-bottom: 200px;
+  box-sizing: border-box;
+  
+  .banner{
     img{
         width: 100%;
     }
@@ -63,6 +86,8 @@ return  scrollTop.value>=420
   padding-bottom: 50px;
 }
 
+
+}
 
 
 </style>

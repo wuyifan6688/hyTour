@@ -19,7 +19,7 @@ const router=createRouter({
             path:"/message",
             component:()=>import("@/views/message/message.vue"),
             meta:{
-                hideTabbar:false
+                hideTabbar:true
             }
         },
         {
